@@ -5,6 +5,7 @@
 5. Variable objetivo
 
 Target: trip_duration (medida en minutos).
+
 Tipo de problema: Regresión (valor numérico continuo).
   
 6. Unidad de predicción
