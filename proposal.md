@@ -95,29 +95,31 @@ MAE y RMSE, utilizando el modelo baseline como referencia.
 
 ## 11. Modelo baseline
 
-Como modelo baseline se utilizará un predictor constante basado en la mediana de
-la variable objetivo `trip_duration`. Este modelo permitirá establecer una
-referencia sencilla del desempeño que se puede obtener sin utilizar un modelo
-predictivo complejo.
+## 11. Modelo baseline
 
-La mediana de `trip_duration` será calculada únicamente a partir de los datos
-del conjunto de entrenamiento. Posteriormente, este mismo valor será utilizado
-como predicción para todos los viajes pertenecientes al conjunto de evaluación.
+Como modelo baseline simple se utilizó un predictor constante basado en la **mediana de la variable objetivo `trip_duration`**, expresada en minutos. El objetivo de este baseline es establecer una referencia inicial de desempeño que permita posteriormente evaluar si los modelos de Machine Learning desarrollados logran mejorar la predicción de la duración de los viajes.
 
-Se utilizará la mediana debido a que la duración de los viajes puede presentar
-valores atípicos que podrían afectar una referencia basada en el promedio. De
-esta manera, se obtiene una referencia más robusta frente a observaciones
-extremas.
+Para mantener la naturaleza temporal del problema, se realizó una separación de los datos utilizando los meses disponibles. Los registros correspondientes a **enero y febrero de 2026** fueron utilizados como conjunto de entrenamiento, mientras que los registros correspondientes a **marzo de 2026** fueron reservados como conjunto de evaluación. De esta manera, la información utilizada para calcular el valor del baseline proviene únicamente de periodos anteriores al conjunto de evaluación.
 
-El desempeño del baseline será evaluado utilizando MAE como métrica principal y
-RMSE como métrica secundaria. Estos resultados servirán como punto de
-comparación para determinar si los modelos de Machine Learning desarrollados
-posteriormente logran reducir el error de predicción respecto a esta referencia
-simple.
+La mediana de `trip_duration` calculada sobre el conjunto de entrenamiento fue de **13.93 minutos**. Este valor se utilizó como predicción constante para todos los viajes pertenecientes al conjunto de evaluación. Se seleccionó la mediana como baseline debido a que la variable objetivo presenta una distribución con valores extremos, como se observó durante el análisis exploratorio. Por ello, la mediana constituye una referencia menos sensible a valores atípicos que una predicción basada en el promedio.
 
-El cálculo del baseline respetará la separación definida para la validación,
-evitando utilizar información del conjunto de evaluación para determinar el
-valor utilizado como predicción.
+El conjunto de entrenamiento estuvo compuesto por **6,958,926 registros**, mientras que el conjunto de evaluación estuvo compuesto por **3,858,758 registros**. Para medir el desempeño del baseline se utilizaron dos métricas de regresión: **MAE (Mean Absolute Error)** como métrica principal y **RMSE (Root Mean Squared Error)** como métrica secundaria.
+
+Los resultados obtenidos fueron los siguientes:
+
+| Métrica | Resultado |
+|---|---:|
+| Registros de entrenamiento | 6,958,926 |
+| Registros de evaluación | 3,858,758 |
+| Mediana utilizada | 13.93 minutos |
+| MAE | 9.08 minutos |
+| RMSE | 14.36 minutos |
+
+El baseline obtuvo un **MAE de 9.08 minutos**, lo que significa que, en promedio, la diferencia absoluta entre la duración real de los viajes y la predicción realizada por este modelo simple fue de aproximadamente 9.08 minutos. Por otro lado, el **RMSE de 14.36 minutos** presenta un valor superior al MAE debido a que esta métrica otorga mayor peso a los errores de mayor magnitud.
+
+Estos resultados constituyen la **línea base del proyecto** y servirán como punto de comparación para los modelos de Machine Learning que se desarrollarán posteriormente. De esta manera, el desempeño de cada modelo podrá evaluarse no solo de forma individual, sino también respecto a una estrategia sencilla que utiliza únicamente el comportamiento central de la variable objetivo.
+
+Finalmente, este baseline permite establecer una referencia reproducible y fácil de interpretar antes de incorporar variables predictoras y modelos más complejos. La mejora respecto a esta referencia será analizada posteriormente utilizando el mismo conjunto de evaluación y las mismas métricas, con el fin de realizar una comparación consistente entre las diferentes estrategias de modelamiento.
 
 ## 12. Riesgos técnicos
 
