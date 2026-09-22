@@ -40,7 +40,7 @@ MachineLearning_Proyecto/
 Para ejecutar la exploración y procesar los archivos Parquet, instala las librerías necesarias ejecutando en tu terminal:
 
 ```bash
-pip install pandas pyarrow fastparquet numpy matplotlib seaborn jupyter
+pip install pandas pyarrow fastparquet numpy matplotlib seaborn jupyter scikit-learn
 ```
 
 > **Nota:** `pyarrow` o `fastparquet` son necesarios como motor interno de `pandas` para la lectura de archivos `.parquet`.
@@ -55,7 +55,7 @@ Sigue estos pasos para reproducir exactamente todo el análisis exploratorio:
 Abre una terminal en la carpeta raíz del proyecto (`MachineLearning_Proyecto`).
 
 ### Paso 2: Verificar la ubicación de los datos
-Asegúrate de que los archivos `.parquet` se encuentren dentro de la carpeta `data/`:
+Asegúrate de que los archivos `.parquet` se encuentren dentro de la carpeta `data/`. Los datos pueden ser descargados desde la página oficial de la [TLC Trip Record Data](https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page):
 * `data/yellow_tripdata_2026-01.parquet`
 * `data/yellow_tripdata_2026-02.parquet`
 * `data/yellow_tripdata_2026-03.parquet`
@@ -93,3 +93,7 @@ El notebook `01_exploracion_inicial.ipynb` ejecuta de forma automatizada las sig
    * Viajes con distancia cero y duración positiva (viajes estáticos/errores de taxímetro).
    * Distancias extremas ($> 100$ millas) y conteos irregulares de pasajeros ($0$ o $> 6$).
    * Comparación visual de la variable objetivo con y sin outliers.
+7. **Modelo Baseline:**
+   * División temporal de los datos (Entrenamiento: Enero y Febrero | Evaluación: Marzo).
+   * Cálculo de una predicción estática basada en la mediana de `trip_duration`.
+   * Evaluación del modelo con métricas MAE (*Mean Absolute Error*) y RMSE (*Root Mean Squared Error*).

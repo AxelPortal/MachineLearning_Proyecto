@@ -1,16 +1,37 @@
-## 4. Pregunta predictiva
+## 1. Título del Proyecto
 
-¿Es posible predecir la duración de un viaje en taxi en la ciudad de Nueva York antes de que este inicie, utilizando un histórico de 3 a 12 meses de datos, basándose en la ubicación de origen, destino, día y hora del servicio?
+Análisis Predictivo y Estimación de la Duración de Viajes de Taxis en Nueva York
+
+## 2. Integrantes
+
+| N° | Nombre Completo |
+| :---: | :--- |
+| 1 | Axel Roberth Portal Ruiz |
+| 2 | Mariel Azucena Reyes Neyra |
+| 3 | Dayron Saiyuk Cueva Loayza |
+| 4 | Patricia Alexandra Luyo Barrios |
+
+
+## 3. Dataset elegido
+
+Para ese proyecto se utilizaron los registros oficiales de la TLC (NYC Taxi & Limousine Commission). Se elegieron los datasets con los registros de los viajes de taxis amarillos en Nueva York (Yellow Taxi Trip Records), de enero a marzo de 2026. 
+
+Los datasets y el diccionario de datos se encuentran en el siguiente enlace:
+https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page
+
+## 4. Pregunta predictiva 
+
+¿Es posible predecir la duración de un viaje en taxi en la ciudad de Nueva York antes de que este inicie, utilizando un histórico de datos de 3 meses de 2026 y basándose en la ubicación de origen, destino, día, hora del servicio y número de pasajeros?
 
 ## 5. Variable objetivo
 
-Target: trip_duration (medida en minutos).
+Target: trip_duration (medida en minutos). Esta se calcula como `tpep_dropoff_datetime-tpep_pickup_datetime`
 
 Tipo de problema: Regresión (valor numérico continuo).
   
 ## 6. Unidad de predicción
 
-Cada viaje individual, es decir, cada fila o registro único dentro del dataset masivo de 3 a 12 meses representa un trayecto independiente realizado por un taxi.
+Cada viaje individual, es decir, cada fila o registro único dentro del dataset masivo de 3 meses representa un trayecto independiente realizado por un taxi.
 
 ## 7. Variables disponibles antes de la predicción
    
@@ -93,7 +114,6 @@ entrenar o ajustar el modelo.
 El desempeño obtenido sobre el conjunto de marzo será comparado mediante las métricas
 MAE y RMSE, utilizando el modelo baseline como referencia.
 
-## 11. Modelo baseline
 
 ## 11. Modelo baseline
 
