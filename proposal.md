@@ -1,18 +1,18 @@
-4. Pregunta predictiva
+## 4. Pregunta predictiva
 
 ¿Es posible predecir la duración de un viaje en taxi en la ciudad de Nueva York antes de que este inicie, utilizando un histórico de 3 a 12 meses de datos, basándose en la ubicación de origen, destino, día y hora del servicio?
 
-5. Variable objetivo
+## 5. Variable objetivo
 
 Target: trip_duration (medida en minutos).
 
 Tipo de problema: Regresión (valor numérico continuo).
   
-6. Unidad de predicción
+## 6. Unidad de predicción
 
 Cada viaje individual, es decir, cada fila o registro único dentro del dataset masivo de 3 a 12 meses representa un trayecto independiente realizado por un taxi.
 
-7. Variables disponibles antes de la predicción
+## 7. Variables disponibles antes de la predicción
    
    Con el objetivo de formular un problema predictivo realista, emplearemos variables que se conocen en el instante en que el pasajero aborda el taxi y solicita el servicio.
    
@@ -23,7 +23,7 @@ Cada viaje individual, es decir, cada fila o registro único dentro del dataset 
    - **`DOLocationID`**: La zona de taxi de destino. Asumimos que esta variable está disponible antes de la predicción, ya que el pasajero suele indicar hacia dónde va antes de que el vehículo empiece a moverse.
    - **`VendorID`**: El proveedor del sistema de tecnología (ej. Creative Mobile Technologies o Curb Mobility).
    - **`passenger_count`**: El número de pasajeros en el vehículo al inicio del viaje.
-8. Riesgos de leakage
+## 8. Riesgos de leakage
 
 Evitamos que el modelo reciba información futura, lo cual representaría una fuga de datos ya que el modelo estaría trabajando con variables que no existen inicialmente. 
 
@@ -171,7 +171,7 @@ El desarrollo del proyecto se estructurará de manera progresiva. A continuació
 
 Durante esta semana, el equipo se enfocó en comprender la viabilidad del proyecto, formular correctamente el problema predictivo y realizar la exploración inicial de los datos (notebook `01_exploracion_inicial.ipynb`).
 
-La elaboración de los puntos del documento `proposal.md` se dividió de la siguiente manera entre los integrantes:
+La elaboración de los puntos del documento `proposal.md` se dividió de la siguiente manera:
 
 * **Dayron:** Estructuración de la pregunta predictiva (punto 4), definición de la variable objetivo (punto 5) y delimitación de la unidad de predicción (punto 6).
 * **Mariel:** Análisis de las variables disponibles antes de la predicción (punto 7), identificación de riesgos de leakage (punto 8) y redacción del plan de trabajo (punto 13).
@@ -180,7 +180,7 @@ La elaboración de los puntos del documento `proposal.md` se dividió de la sigu
 
 ### Plan de trabajo semanas restantes (Semanas 8 a 16 - Entrega Final)
 
-Para cumplir con los artefactos obligatorios y la rúbrica de la entrega final, las tareas se han distribuido en las siguientes fases metodológicas:
+Para cumplir con lo requerido en entrega final, las próximas tareas se han distribuido en las siguientes fases:
 
 | Fase / Semanas | Actividades y Entregables | Requisito de la Rúbrica | Responsables |
 | :--- | :--- | :--- | :--- |
