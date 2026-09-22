@@ -36,6 +36,62 @@ Evitamos que el modelo reciba información futura, lo cual representaría una fu
 **Primeras medidas de control:**
 Como medida de prevención, se descartarán del dataset todas las variables que suponen riesgo de fuga de datos. Esta limpieza se realizará antes de cualquier exploración profunda o partición de datos para garantizar que el modelo base no se contamine.
 
+## 9. Métricas de evaluación
+
+El desempeño de los modelos se evaluará utilizando métricas de regresión que permitan
+medir el error entre la duración real del viaje y la duración estimada por el modelo.
+
+La métrica principal será el **Mean Absolute Error (MAE)**, ya que permite interpretar
+directamente el error promedio de las predicciones en minutos. Por ejemplo, un MAE de
+5 minutos indica que, en promedio, las predicciones se encuentran a aproximadamente
+5 minutos del valor real.
+
+Como métrica secundaria se utilizará el **Root Mean Squared Error (RMSE)**, que
+penaliza en mayor medida los errores de mayor magnitud. Esta métrica permitirá
+identificar si existen predicciones que presentan errores considerablemente superiores
+al comportamiento habitual.
+
+La comparación de los modelos se realizará utilizando las mismas métricas y el mismo
+conjunto de evaluación. Además, los resultados serán comparados con el modelo
+baseline definido previamente, con el objetivo de determinar si los modelos de
+Machine Learning logran mejorar la referencia inicial.
+
+Las métricas consideradas serán:
+
+- **MAE (Mean Absolute Error):** error absoluto promedio de las predicciones,
+  expresado en minutos.
+- **RMSE (Root Mean Squared Error):** raíz del error cuadrático medio, expresado
+  en minutos y con mayor sensibilidad frente a errores grandes.
+
+Un menor valor de MAE y RMSE representará un menor error de predicción de la
+duración del viaje.
+
+## 10. Estrategia de validación
+
+La validación del proyecto considerará la naturaleza temporal de los registros de
+viajes de taxi. Debido a que el objetivo es predecir la duración de un viaje a partir
+de información disponible antes de su inicio, se evitará utilizar información futura
+durante el entrenamiento del modelo.
+
+Para la evaluación se utilizará una separación temporal de los datos. Los registros
+correspondientes a los primeros meses disponibles serán utilizados para el
+entrenamiento, mientras que el último mes será reservado para evaluar el desempeño
+de los modelos sobre datos que no fueron utilizados durante su entrenamiento.
+
+En este proyecto se considerarán los registros de **enero y febrero de 2026 como
+conjunto de entrenamiento**, mientras que los registros de **marzo de 2026 serán
+utilizados como conjunto de evaluación**.
+
+Esta estrategia permitirá simular de mejor manera un escenario real de predicción,
+en el cual el modelo utiliza información histórica para realizar predicciones sobre
+viajes posteriores.
+
+Además, la separación temporal permitirá reducir el riesgo de **data leakage**,
+evitando que información correspondiente al periodo de evaluación sea utilizada para
+entrenar o ajustar el modelo.
+
+El desempeño obtenido sobre el conjunto de marzo será comparado mediante las métricas
+MAE y RMSE, utilizando el modelo baseline como referencia.
 
 ## 11. Modelo baseline
 
@@ -105,3 +161,41 @@ incrementa el periodo de análisis o se incorporan nuevos registros, aumentarán
 los requerimientos de almacenamiento, memoria y tiempo de procesamiento. Por
 ello, se buscará mantener un procesamiento eficiente y utilizar únicamente las
 variables necesarias para cada etapa del proyecto.
+
+## 13. Plan de trabajo
+
+El desarrollo del proyecto se realizará de manera progresiva, comenzando con la
+preparación y exploración de los datos y avanzando posteriormente hacia la
+construcción, evaluación y comparación de los modelos de Machine Learning.
+
+Las actividades planificadas son las siguientes:
+
+1. **Finalización de la exploración y preparación de los datos:** revisar la
+   calidad de los datos, valores faltantes, registros atípicos y variables
+   disponibles para la predicción.
+
+2. **Definición de variables y validación:** seleccionar las variables que
+   estarán disponibles antes del inicio del viaje, controlar posibles casos de
+   data leakage y establecer el esquema de validación.
+
+3. **Implementación del modelo baseline:** establecer la mediana de
+   `trip_duration` como referencia y evaluar su desempeño mediante las métricas
+   definidas.
+
+4. **Preparación de los datos para Machine Learning:** realizar las
+   transformaciones necesarias sobre las variables seleccionadas y preparar los
+   conjuntos de entrenamiento y evaluación.
+
+5. **Entrenamiento de modelos:** desarrollar y entrenar los modelos de
+   Machine Learning seleccionados para el problema de regresión.
+
+6. **Evaluación y comparación:** comparar el desempeño de los modelos utilizando
+   MAE y RMSE, tomando el baseline como referencia.
+
+7. **Análisis de resultados:** identificar las variables y modelos que presenten
+   un comportamiento relevante, analizar los errores obtenidos y revisar las
+   limitaciones del enfoque utilizado.
+
+8. **Documentación y presentación final:** consolidar los resultados, documentar
+   el proceso realizado en el repositorio de GitHub y preparar las conclusiones
+   y presentación del proyecto.
