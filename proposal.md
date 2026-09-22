@@ -184,8 +184,8 @@ Para cumplir con los artefactos obligatorios y la rúbrica de la entrega final, 
 
 | Fase / Semanas | Actividades y Entregables | Requisito de la Rúbrica | Responsables |
 | :--- | :--- | :--- | :--- |
-| **Semanas 8 a 9:**<br>Preprocesamiento y Feature Engineering | Limpieza de datos (tratamiento de valores faltantes y outliers). Eliminación de columnas con leakage y creación de variables derivadas (ej. componentes temporales y distancias espaciales). | Pipeline reproducible, limpieza y control de leakage. | Mariel y Axel |
-| **Semanas 10 a 11:**<br>Validación y Baseline | Partición del dataset (split) respetando el orden temporal. Construcción e iteración del modelo baseline simple y honesto (regresión lineal o media/mediana) para obtener las primeras métricas base. | Partición correcta y modelo baseline ejecutado. | Dayron y Patricia |
-| **Semanas 12 a 13:**<br>Modelado Avanzado | Desarrollo y entrenamiento de Machine Learning utilizando pipelines. Se probarán al menos 3 familias de modelos comparables (ej. modelos lineales, árboles de decisión, gradient boosting) con búsqueda de hiperparámetros. | Modelado (3 familias) y mejora frente al baseline. | Axel y Dayron |
-| **Semanas 14 a 15:**<br>Evaluación y Análisis de Errores | Comparación justa del rendimiento de los modelos frente al baseline usando las métricas elegidas. Análisis de la interpretabilidad del modelo, revisión de casos problemáticos y discusión de sesgos. | Análisis de errores e interpretabilidad. | Mariel y Patricia |
-| **Semana 16:**<br>Documentación y Reproducibilidad | Consolidación del informe final con los 15 puntos requeridos, limpieza del código en el directorio `src/`, revisión del archivo `requirements.txt` y fijación de semillas aleatorias. Preparación de la presentación breve. | README ejecutable, código limpio, informe final y presentación. | Todo el equipo |
+| **Semanas 8 a 9:**<br>Preprocesamiento | Limpieza de datos, eliminación de leakage y creación de variables. | Pipeline reproducible y control de leakage. | Mariel y Axel |
+| **Semanas 10 a 11:**<br>Validación y Baseline | División temporal y construcción del modelo baseline. | Validación correcta y baseline ejecutado. | Dayron y Patricia |
+| **Semanas 12 a 13:**<br>Modelado Avanzado | Entrenamiento y comparación de 3 familias de modelos. | Modelado y mejora frente al baseline. | Axel y Dayron |
+| **Semanas 14 a 15:**<br>Evaluación | Comparación de métricas y análisis de errores. | Interpretabilidad y análisis de errores. | Mariel y Patricia |
+| **Semana 16:**<br>Documentación | Informe final, limpieza del código y presentación. | Reproducibilidad e informe final. | Todo el equipo |
