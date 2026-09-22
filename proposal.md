@@ -162,40 +162,30 @@ los requerimientos de almacenamiento, memoria y tiempo de procesamiento. Por
 ello, se buscará mantener un procesamiento eficiente y utilizar únicamente las
 variables necesarias para cada etapa del proyecto.
 
+
 ## 13. Plan de trabajo
 
-El desarrollo del proyecto se realizará de manera progresiva, comenzando con la
-preparación y exploración de los datos y avanzando posteriormente hacia la
-construcción, evaluación y comparación de los modelos de Machine Learning.
+El desarrollo del proyecto se estructurará de manera progresiva. A continuación, se detalla lo trabajado durante la presente semana para la entrega previa y el cronograma planificado para las semanas restantes hasta la entrega final en la semana 16.
 
-Las actividades planificadas son las siguientes:
+### Lo trabajado esta semana (Semana 7 - Entrega Previa)
 
-1. **Finalización de la exploración y preparación de los datos:** revisar la
-   calidad de los datos, valores faltantes, registros atípicos y variables
-   disponibles para la predicción.
+Durante esta semana, el equipo se enfocó en comprender la viabilidad del proyecto, formular correctamente el problema predictivo y realizar la exploración inicial de los datos (notebook `01_exploracion_inicial.ipynb`).
 
-2. **Definición de variables y validación:** seleccionar las variables que
-   estarán disponibles antes del inicio del viaje, controlar posibles casos de
-   data leakage y establecer el esquema de validación.
+La elaboración de los puntos del documento `proposal.md` se dividió de la siguiente manera entre los integrantes:
 
-3. **Implementación del modelo baseline:** establecer la mediana de
-   `trip_duration` como referencia y evaluar su desempeño mediante las métricas
-   definidas.
+* **Dayron:** Estructuración de la pregunta predictiva (punto 4), definición de la variable objetivo (punto 5) y delimitación de la unidad de predicción (punto 6).
+* **Mariel:** Análisis de las variables disponibles antes de la predicción (punto 7), identificación de riesgos de leakage (punto 8) y redacción del plan de trabajo (punto 13).
+* **Axel:** Selección y justificación de la métrica principal y secundaria (punto 9), y diseño del plan de validación (punto 10).
+* **Patricia:** Formulación del modelo baseline (punto 11) y análisis de los riesgos técnicos del proyecto (punto 12).
 
-4. **Preparación de los datos para Machine Learning:** realizar las
-   transformaciones necesarias sobre las variables seleccionadas y preparar los
-   conjuntos de entrenamiento y evaluación.
+### Plan de trabajo semanas restantes (Semanas 8 a 16 - Entrega Final)
 
-5. **Entrenamiento de modelos:** desarrollar y entrenar los modelos de
-   Machine Learning seleccionados para el problema de regresión.
+Para cumplir con los artefactos obligatorios y la rúbrica de la entrega final, las tareas se han distribuido en las siguientes fases metodológicas:
 
-6. **Evaluación y comparación:** comparar el desempeño de los modelos utilizando
-   MAE y RMSE, tomando el baseline como referencia.
-
-7. **Análisis de resultados:** identificar las variables y modelos que presenten
-   un comportamiento relevante, analizar los errores obtenidos y revisar las
-   limitaciones del enfoque utilizado.
-
-8. **Documentación y presentación final:** consolidar los resultados, documentar
-   el proceso realizado en el repositorio de GitHub y preparar las conclusiones
-   y presentación del proyecto.
+| Fase / Semanas | Actividades y Entregables | Requisito de la Rúbrica | Responsables |
+| :--- | :--- | :--- | :--- |
+| **Semanas 8 a 9:**<br>Preprocesamiento y Feature Engineering | Limpieza de datos (tratamiento de valores faltantes y outliers). Eliminación de columnas con leakage y creación de variables derivadas (ej. componentes temporales y distancias espaciales). | Pipeline reproducible, limpieza y control de leakage. | Mariel y Axel |
+| **Semanas 10 a 11:**<br>Validación y Baseline | Partición del dataset (split) respetando el orden temporal. Construcción e iteración del modelo baseline simple y honesto (regresión lineal o media/mediana) para obtener las primeras métricas base. | Partición correcta y modelo baseline ejecutado. | Dayron y Patricia |
+| **Semanas 12 a 13:**<br>Modelado Avanzado | Desarrollo y entrenamiento de Machine Learning utilizando pipelines. Se probarán al menos 3 familias de modelos comparables (ej. modelos lineales, árboles de decisión, gradient boosting) con búsqueda de hiperparámetros. | Modelado (3 familias) y mejora frente al baseline. | Axel y Dayron |
+| **Semanas 14 a 15:**<br>Evaluación y Análisis de Errores | Comparación justa del rendimiento de los modelos frente al baseline usando las métricas elegidas. Análisis de la interpretabilidad del modelo, revisión de casos problemáticos y discusión de sesgos. | Análisis de errores e interpretabilidad. | Mariel y Patricia |
+| **Semana 16:**<br>Documentación y Reproducibilidad | Consolidación del informe final con los 15 puntos requeridos, limpieza del código en el directorio `src/`, revisión del archivo `requirements.txt` y fijación de semillas aleatorias. Preparación de la presentación breve. | README ejecutable, código limpio, informe final y presentación. | Todo el equipo |
