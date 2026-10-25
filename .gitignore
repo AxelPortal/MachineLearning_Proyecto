@@ -1,0 +1,16 @@
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Jupyter Checkpoints
+.ipynb_checkpoints/
+
+# Virtual environments
+venv/
+.env/
+env/
+
+# OS generated
+.DS_Store
+Thumbs.db
