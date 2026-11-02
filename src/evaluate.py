@@ -1,8 +1,3 @@
-"""
-Módulo de evaluación y cálculo de métricas para el proyecto de predicción de viajes en taxi.
-Funciones modulares y consistentes para calcular MAE, RMSE, R² y registrar resultados.
-"""
-
 import json
 import os
 from typing import Dict, List, Optional, Union

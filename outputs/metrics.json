@@ -1,0 +1,20 @@
+[
+    {
+        "Modelo": "Baseline 0: Mediana Global",
+        "MAE": 9.5838,
+        "RMSE": 15.6528,
+        "R2": -0.0877
+    },
+    {
+        "Modelo": "Baseline 1: Dummy por Par Origen-Destino",
+        "MAE": 5.2137,
+        "RMSE": 9.5884,
+        "R2": 0.5919
+    },
+    {
+        "Modelo": "Baseline 2: Regresión Ridge Regularizada",
+        "MAE": 7.4199,
+        "RMSE": 10.9509,
+        "R2": 0.4676
+    }
+]
