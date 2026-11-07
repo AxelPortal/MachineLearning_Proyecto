@@ -14,14 +14,14 @@ Análisis Predictivo y Estimación de la Duración de Viajes de Taxis en Nueva Y
 
 ## 3. Dataset elegido
 
-Para ese proyecto se utilizaron los registros oficiales de la TLC (NYC Taxi & Limousine Commission). Se elegieron los datasets con los registros de los viajes de taxis amarillos en Nueva York (Yellow Taxi Trip Records), de enero a marzo de 2026. 
+Para este proyecto se utilizaron los registros oficiales de la TLC (NYC Taxi & Limousine Commission). Se eligieron los datasets con el **100% de los registros de los viajes de taxis amarillos en Nueva York (Yellow Taxi Trip Records), de enero a junio de 2026 (6 meses completos, 22,836,530 viajes crudos y 16,409,232 viajes limpios válidos)**, aplicando técnicas de proyección de columnas y reducción de tipos de datos (*downcasting* a `int8`, `uint16` y `float32`) para optimizar el uso de memoria RAM.
 
 Los datasets y el diccionario de datos se encuentran en el siguiente enlace:
 https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page
 
 ## 4. Pregunta predictiva 
 
-¿Es posible predecir la duración de un viaje en taxi en la ciudad de Nueva York antes de que este inicie, utilizando un histórico de datos de 3 meses de 2026 y basándose en la ubicación de origen, destino, día, hora del servicio y número de pasajeros?
+¿Es posible predecir la duración de un viaje en taxi en la ciudad de Nueva York antes de que este inicie, utilizando un histórico de datos de 6 meses completos de 2026 y basándose en la ubicación de origen, destino, día, hora del servicio y número de pasajeros?
 
 ## 5. Variable objetivo
 
@@ -31,7 +31,7 @@ Tipo de problema: Regresión (valor numérico continuo).
   
 ## 6. Unidad de predicción
 
-Cada viaje individual, es decir, cada fila o registro único dentro del dataset masivo de 3 meses representa un trayecto independiente realizado por un taxi.
+Cada viaje individual, es decir, cada fila o registro único dentro del dataset masivo de 6 meses representa un trayecto independiente realizado por un taxi.
 
 ## 7. Variables disponibles antes de la predicción
    
@@ -99,9 +99,7 @@ correspondientes a los primeros meses disponibles serán utilizados para el
 entrenamiento, mientras que el último mes será reservado para evaluar el desempeño
 de los modelos sobre datos que no fueron utilizados durante su entrenamiento.
 
-En este proyecto se considerarán los registros de **enero y febrero de 2026 como
-conjunto de entrenamiento**, mientras que los registros de **marzo de 2026 serán
-utilizados como conjunto de evaluación**.
+En este proyecto se considerarán los registros de **enero a mayo de 2026 (5 meses completos, 83.41% del total) como conjunto de entrenamiento**, mientras que los registros de **junio de 2026 (1 mes completo, 16.59% del total) serán utilizados como conjunto de evaluación**, manteniendo una proporción temporal por meses cercana al estándar clásico **80/20** de Machine Learning.
 
 Esta estrategia permitirá simular de mejor manera un escenario real de predicción,
 en el cual el modelo utiliza información histórica para realizar predicciones sobre
@@ -111,7 +109,7 @@ Además, la separación temporal permitirá reducir el riesgo de **data leakage*
 evitando que información correspondiente al periodo de evaluación sea utilizada para
 entrenar o ajustar el modelo.
 
-El desempeño obtenido sobre el conjunto de marzo será comparado mediante las métricas
+El desempeño obtenido sobre el conjunto de junio será comparado mediante las métricas
 MAE y RMSE, utilizando el modelo baseline como referencia.
 
 
@@ -119,23 +117,23 @@ MAE y RMSE, utilizando el modelo baseline como referencia.
 
 Como modelo baseline simple se utilizó un predictor constante basado en la **mediana de la variable objetivo `trip_duration`**, expresada en minutos. El objetivo de este baseline es establecer una referencia inicial de desempeño que permita posteriormente evaluar si los modelos de Machine Learning desarrollados logran mejorar la predicción de la duración de los viajes.
 
-Para mantener la naturaleza temporal del problema, se realizó una separación de los datos utilizando los meses disponibles. Los registros correspondientes a **enero y febrero de 2026** fueron utilizados como conjunto de entrenamiento, mientras que los registros correspondientes a **marzo de 2026** fueron reservados como conjunto de evaluación. De esta manera, la información utilizada para calcular el valor del baseline proviene únicamente de periodos anteriores al conjunto de evaluación.
+Para mantener la naturaleza temporal del problema, se realizó una separación de los datos utilizando los meses disponibles. Los registros correspondientes a **enero a mayo de 2026 (83.41%)** fueron utilizados como conjunto de entrenamiento, mientras que los registros correspondientes a **junio de 2026 (16.59%)** fueron reservados como conjunto de evaluación. De esta manera, la información utilizada para calcular el valor del baseline proviene únicamente de periodos anteriores al conjunto de evaluación.
 
-La mediana de `trip_duration` calculada sobre el conjunto de entrenamiento fue de **13.93 minutos**. Este valor se utilizó como predicción constante para todos los viajes pertenecientes al conjunto de evaluación. Se seleccionó la mediana como baseline debido a que la variable objetivo presenta una distribución con valores extremos, como se observó durante el análisis exploratorio. Por ello, la mediana constituye una referencia menos sensible a valores atípicos que una predicción basada en el promedio.
+La mediana de `trip_duration` calculada sobre el conjunto de entrenamiento limpio fue de **13.07 minutos**. Este valor se utilizó como predicción constante para todos los viajes pertenecientes al conjunto de evaluación. Se seleccionó la mediana como baseline debido a que la variable objetivo presenta una distribución con valores extremos, como se observó durante el análisis exploratorio. Por ello, la mediana constituye una referencia menos sensible a valores atípicos que una predicción basada en el promedio.
 
-El conjunto de entrenamiento estuvo compuesto por **6,958,926 registros**, mientras que el conjunto de evaluación estuvo compuesto por **3,858,758 registros**. Para medir el desempeño del baseline se utilizaron dos métricas de regresión: **MAE (Mean Absolute Error)** como métrica principal y **RMSE (Root Mean Squared Error)** como métrica secundaria.
+El conjunto de entrenamiento limpio estuvo compuesto por **13,686,384 registros**, mientras que el conjunto de evaluación estuvo compuesto por **2,722,848 registros** (totalizando **16,409,232 viajes válidos** en los 6 meses). Para medir el desempeño del baseline se utilizaron dos métricas de regresión: **MAE (Mean Absolute Error)** como métrica principal y **RMSE (Root Mean Squared Error)** como métrica secundaria.
 
 Los resultados obtenidos fueron los siguientes:
 
 | Métrica | Resultado |
 |---|---:|
-| Registros de entrenamiento | 6,958,926 |
-| Registros de evaluación | 3,858,758 |
-| Mediana utilizada | 13.93 minutos |
-| MAE | 9.08 minutos |
-| RMSE | 14.36 minutos |
+| Registros de entrenamiento (Ene – May 2026) | 13,686,384 (83.41%) |
+| Registros de evaluación (Junio 2026) | 2,722,848 (16.59%) |
+| Mediana utilizada | 13.07 minutos |
+| MAE | 9.20 minutos |
+| RMSE | 14.30 minutos |
 
-El baseline obtuvo un **MAE de 9.08 minutos**, lo que significa que, en promedio, la diferencia absoluta entre la duración real de los viajes y la predicción realizada por este modelo simple fue de aproximadamente 9.08 minutos. Por otro lado, el **RMSE de 14.36 minutos** presenta un valor superior al MAE debido a que esta métrica otorga mayor peso a los errores de mayor magnitud.
+El baseline obtuvo un **MAE de 9.20 minutos**, lo que significa que, en promedio, la diferencia absoluta entre la duración real de los viajes y la predicción realizada por este modelo simple fue de aproximadamente 9.20 minutos. Por otro lado, el **RMSE de 14.30 minutos** presenta un valor superior al MAE debido a que esta métrica otorga mayor peso a los errores de mayor magnitud.
 
 Estos resultados constituyen la **línea base del proyecto** y servirán como punto de comparación para los modelos de Machine Learning que se desarrollarán posteriormente. De esta manera, el desempeño de cada modelo podrá evaluarse no solo de forma individual, sino también respecto a una estrategia sencilla que utiliza únicamente el comportamiento central de la variable objetivo.
 

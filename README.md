@@ -1,12 +1,12 @@
 # Proyecto de Machine Learning: Predicción de Duración de Viajes en Taxi (NYC)
 
-Este repositorio contiene el desarrollo del proyecto de Machine Learning para predecir la duración de los viajes de los taxis amarillos (*Yellow Taxis*) de la ciudad de Nueva York antes de que inicien, utilizando registros históricos oficiales de la TLC (Taxi & Limousine Commission).
+Este repositorio contiene el desarrollo del proyecto de Machine Learning para predecir la duración de los viajes de los taxis amarillos (*Yellow Taxis*) de la ciudad de Nueva York antes de que inicien, utilizando registros históricos oficiales de la TLC (Taxi & Limousine Commission) correspondientes a **6 meses completos (Enero a Junio de 2026 — 22,836,530 viajes crudos y 16,409,232 viajes limpios válidos)**.
 
 ---
 
 ## 1. Pregunta Predictiva y Variable Objetivo
 
-* **Pregunta predictiva:** ¿Es posible predecir la duración de un viaje en taxi en la ciudad de Nueva York antes de que este inicie, utilizando un histórico de datos y basándose en la ubicación de origen, destino, día y hora del servicio?
+* **Pregunta predictiva:** ¿Es posible predecir la duración de un viaje en taxi en la ciudad de Nueva York antes de que este inicie, utilizando un histórico de datos de 6 meses completos de 2026 y basándose en la ubicación de origen, destino, día, hora del servicio y número de pasajeros?
 * **Tipo de problema:** Regresión (valor numérico continuo).
 * **Variable objetivo (*Target*):** `trip_duration` (medida en minutos), calculada como la diferencia entre la hora de llegada (`tpep_dropoff_datetime`) y la hora de inicio (`tpep_pickup_datetime`).
 * **Unidad de análisis:** Cada fila representa un viaje individual completado.
@@ -17,83 +17,77 @@ Este repositorio contiene el desarrollo del proyecto de Machine Learning para pr
 
 ```text
 MachineLearning_Proyecto/
-├── data/                                # Archivos de datos en formato Parquet
-│   ├── yellow_tripdata_2026-01.parquet
-│   ├── yellow_tripdata_2026-02.parquet
-│   ├── yellow_tripdata_2026-03.parquet
-├── notebooks/                           # Jupyter Notebooks de exploración y modelado
-│   └── 01_exploracion_inicial.ipynb     # Análisis Exploratorio de Datos (EDA)
-├── src/                                 # Scripts y módulos auxiliares
-├── proposal.md                          # Propuesta inicial del proyecto
-└── README.md                            # Documentación del proyecto
+├── data/
+│   ├── raw/                                 # Archivos Parquet originales (Enero - Junio 2026)
+│   │   ├── yellow_tripdata_2026-01.parquet
+│   │   ├── yellow_tripdata_2026-02.parquet
+│   │   ├── yellow_tripdata_2026-03.parquet
+│   │   ├── yellow_tripdata_2026-04.parquet
+│   │   ├── yellow_tripdata_2026-05.parquet
+│   │   └── yellow_tripdata_2026-06.parquet
+│   ├── processed/                           # Dataset limpio y optimizado (16.4M filas, zstd)
+│   │   └── yellow_tripdata_processed.parquet
+│   └── README.md                            # Diccionario y descripción de datos
+├── notebooks/
+│   ├── 01_exploracion_inicial.ipynb         # Análisis Exploratorio de Datos (EDA)
+│   ├── 02_limpieza_features.ipynb           # Limpieza, Downcasting e Ingeniería de Features
+│   ├── 03_modelos.ipynb                     # Partición Temporal (~80/20), Baselines y Modelos
+│   └── 04_analisis_errores.ipynb            # Análisis de errores por segmento e interpretabilidad
+├── src/
+│   ├── data.py                              # Carga secuencial, proyección de columnas y downcasting
+│   ├── features.py                          # Extracción de features en int8/float32 y preprocesador
+│   ├── evaluate.py                          # Cálculo consistente de MAE, RMSE y R²
+│   └── train.py                             # Script de entrenamiento reproducible
+├── outputs/
+│   └── metrics.json                         # Registro estructurado de métricas de evaluación
+├── reports/
+│   ├── figures/                             # Gráficos y visualizaciones exportadas
+│   └── informe_final.md                     # Informe técnico final del proyecto
+├── proposal.md                              # Propuesta técnica del proyecto
+├── requirements.txt                         # Dependencias del proyecto
+└── README.md                                # Documentación principal
 ```
 
 ---
 
-## 3. Requisitos e Instalación
+## 3. Optimización de Memoria RAM (*Downcasting* y Proyección de Columnas)
 
-### Requisitos previos
-* **Python 3.10** o superior.
-* Gestor de paquetes `pip` o entorno Conda.
+Para procesar el **100% de los 6 meses (22.84 millones de registros crudos $\rightarrow$ 16.41 millones de registros limpios)** sin submuestreo en equipos de 16 GB de RAM, se implementaron tres técnicas en `src/data.py` y `src/features.py`:
 
-### Instalación de dependencias
-Para ejecutar la exploración y procesar los archivos Parquet, instala las librerías necesarias ejecutando en tu terminal:
+1. **Proyección de columnas en lectura (`columns=REQUIRED_RAW_COLS`):** Se leen desde Parquet únicamente las 6 columnas requeridas antes del inicio del viaje, descartando en disco las 14 columnas de *Data Leakage*.
+2. **Procesamiento secuencial por lote mensual:** Cada mes se filtra y limpia de forma independiente antes de concatenarse en memoria.
+3. **Reducción de tipos numéricos (*Downcasting*):**
+   * `int64` (8 bytes) $\rightarrow$ `int8` (1 byte) para `VendorID`, `passenger_count`, `pickup_hour`, `pickup_dayofweek`, `pickup_month`, `is_weekend`, `is_rush_hour`, `is_airport` (**ahorro del 87.5%**).
+   * `int64` (8 bytes) $\rightarrow$ `uint16` (2 bytes) para `PULocationID` y `DOLocationID` (**ahorro del 75%**).
+   * `float64` (8 bytes) $\rightarrow$ `float32` (4 bytes) para `trip_duration`, `sin_hour`, `cos_hour` (**ahorro del 50%**).
+   * **Impacto total:** Los 16,409,232 viajes con sus 13 columnas ocupan apenas **375.58 MB en RAM** (frente a >3,480 MB sin optimizar, logrando un **ahorro total superior al 89%**) y **58.51 MB en disco** con compresión `zstd`.
+
+---
+
+## 4. Estrategia de Partición Temporal por Meses (~80/20) y Baselines
+
+Respetando la naturaleza temporal del fenómeno y evitando cualquier fuga de información futura (*look-ahead bias*), la partición se realiza estrictamente por meses completos:
+
+* **Entrenamiento (Enero a Mayo de 2026 — 5 meses):** `13,686,384` viajes (**83.41%**).
+* **Evaluación / Testing (Junio de 2026 — 1 mes):** `2,722,848` viajes (**16.59%**).
+
+### Resultados de la Línea Base (Evaluados en Junio 2026):
+
+| Modelo | MAE (min) | RMSE (min) | $R^2$ | Mejora MAE vs. Baseline 0 |
+| :--- | :---: | :---: | :---: | :---: |
+| **Baseline 0: Mediana Global (`13.07` min)** | 9.1992 | 14.2975 | -0.0852 | 0.00% |
+| **Baseline 1: Dummy por Par Origen-Destino** | **4.9237** | **7.7802** | **0.6787** | **+46.48%** |
+| **Baseline 2: Regresión Ridge Regularizada** | 7.3279 | 10.2034 | 0.4473 | +20.34% |
+
+---
+
+## 5. Requisitos e Instrucciones de Reproducción
 
 ```bash
-pip install pandas pyarrow fastparquet numpy matplotlib seaborn jupyter scikit-learn
+pip install -r requirements.txt
 ```
 
-> **Nota:** `pyarrow` o `fastparquet` son necesarios como motor interno de `pandas` para la lectura de archivos `.parquet`.
-
----
-
-## 4. Instrucciones para Reproducir la Exploración
-
-Sigue estos pasos para reproducir exactamente todo el análisis exploratorio:
-
-### Paso 1: Clonar o abrir el proyecto
-Abre una terminal en la carpeta raíz del proyecto (`MachineLearning_Proyecto`).
-
-### Paso 2: Verificar la ubicación de los datos
-Asegúrate de que los archivos `.parquet` se encuentren dentro de la carpeta `data/`. Los datos pueden ser descargados desde la página oficial de la [TLC Trip Record Data](https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page):
-* `data/yellow_tripdata_2026-01.parquet`
-* `data/yellow_tripdata_2026-02.parquet`
-* `data/yellow_tripdata_2026-03.parquet`
-
-### Paso 3: Iniciar el entorno de Jupyter
-Ejecuta en tu terminal:
-```bash
-jupyter notebook
-```
-o abre la carpeta del proyecto directamente en **Visual Studio Code** con la extensión de Jupyter instalada.
-
-### Paso 4: Ejecutar el Notebook
-1. Navega a la carpeta `notebooks/` y abre el archivo [`01_exploracion_inicial.ipynb`](notebooks/01_exploracion_inicial.ipynb).
-2. Selecciona el kernel de Python correspondiente.
-3. Ejecuta todas las celdas secuencialmente o presiona **"Run All"** / **"Ejecutar todo"**.
-
----
-
-## 5. Contenido del Análisis Exploratorio (EDA)
-
-El notebook `01_exploracion_inicial.ipynb` ejecuta de forma automatizada las siguientes secciones sobre los **3 meses de datos (+11 millones de filas)**:
-
-1. **Carga de Datos:** Lectura eficiente de los 3 meses iniciales con gestión dinámica de rutas.
-2. **Dimensiones y Tipos de Datos:** Inspección de filas, columnas y tipos de datos mediante `df.info()` y `df.describe()`.
-3. **Diagnóstico de Valores Faltantes:** Tabla cuantitativa y gráfico de barras del porcentaje de nulos por variable (analizando campos como `passenger_count`, `RatecodeID`, recargos por congestión, etc.).
-4. **Variable Objetivo (`trip_duration`):** Cálculo del tiempo de viaje en minutos y cálculo de estadísticas descriptivas con percentiles (1%, 5%, 25%, 50%, 75%, 95%, 99%).
-5. **5 Visualizaciones Clave del Fenómeno:**
-   * **Distribución:** Histograma y Boxplot de la duración del viaje (rango 1 a 120 min).
-   * **Patrón Horario:** Evolución de la duración media y mediana a lo largo de las 24 horas del día (identificación de horas punta y congestión vehicular).
-   * **Comportamiento Semanal:** Duración promedio de lunes a domingo.
-   * **Distancia vs. Duración:** Gráfico de densidad Hexbin en 2D (con escala logarítmica) para visualizar la relación espacial sin saturación de memoria.
-   * **Matriz de Correlación:** Mapa de calor (*Heatmap*) de correlación de Pearson entre variables continuas.
-6. **Auditoría de Outliers y Registros Sospechosos:**
-   * Conteo y porcentaje de viajes con duración $\le 0$ o $> 3$ horas.
-   * Viajes con distancia cero y duración positiva (viajes estáticos/errores de taxímetro).
-   * Distancias extremas ($> 100$ millas) y conteos irregulares de pasajeros ($0$ o $> 6$).
-   * Comparación visual de la variable objetivo con y sin outliers.
-7. **Modelo Baseline:**
-   * División temporal de los datos (Entrenamiento: Enero y Febrero | Evaluación: Marzo).
-   * Cálculo de una predicción estática basada en la mediana de `trip_duration`.
-   * Evaluación del modelo con métricas MAE (*Mean Absolute Error*) y RMSE (*Root Mean Squared Error*).
+Para regenerar el flujo completo:
+1. Ejecutar `notebooks/01_exploracion_inicial.ipynb` para revisar el análisis exploratorio de los 6 meses.
+2. Ejecutar `notebooks/02_limpieza_features.ipynb` para procesar los 6 meses con *downcasting* y generar `data/processed/yellow_tripdata_processed.parquet`.
+3. Ejecutar `notebooks/03_modelos.ipynb` para reproducir la partición temporal (Ene–May vs. Jun), los baselines y el entrenamiento de modelos.
