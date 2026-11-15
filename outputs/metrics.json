@@ -16,5 +16,17 @@
         "MAE": 7.4199,
         "RMSE": 10.9509,
         "R2": 0.4676
+    },
+    {
+        "Modelo": "HistGradientBoosting Optimizado",
+        "MAE": 6.6703,
+        "RMSE": 9.836,
+        "R2": 0.5705
+    },
+    {
+        "Modelo": "Random Forest Optimizado",
+        "MAE": 7.5875,
+        "RMSE": 11.1867,
+        "R2": 0.4444
     }
 ]
