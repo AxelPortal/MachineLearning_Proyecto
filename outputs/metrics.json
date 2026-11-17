@@ -13,20 +13,20 @@
     },
     {
         "Modelo": "Baseline 2: Regresión Ridge Regularizada",
-        "MAE": 7.4199,
-        "RMSE": 10.9509,
-        "R2": 0.4676
+        "MAE": 7.3279,
+        "RMSE": 10.2034,
+        "R2": 0.4473
     },
     {
-        "Modelo": "HistGradientBoosting Optimizado",
-        "MAE": 6.6703,
-        "RMSE": 9.836,
-        "R2": 0.5705
+        "Modelo": "HistGradientBoosting Optimizado (L1 + OD)",
+        "MAE": 4.0651,
+        "RMSE": 6.4749,
+        "R2": 0.7774
     },
     {
         "Modelo": "Random Forest Optimizado",
-        "MAE": 7.5875,
-        "RMSE": 11.1867,
-        "R2": 0.4444
+        "MAE": 7.2496,
+        "RMSE": 9.7786,
+        "R2": 0.4924
     }
 ]

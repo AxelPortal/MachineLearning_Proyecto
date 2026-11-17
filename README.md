@@ -71,23 +71,35 @@ Respetando la naturaleza temporal del fenómeno y evitando cualquier fuga de inf
 * **Entrenamiento (Enero a Mayo de 2026 — 5 meses):** `13,686,384` viajes (**83.41%**).
 * **Evaluación / Testing (Junio de 2026 — 1 mes):** `2,722,848` viajes (**16.59%**).
 
-### Resultados de la Línea Base (Evaluados en Junio 2026):
+### Resultados Comparativos Finales (Evaluados en Junio 2026 — `2,722,848` viajes):
 
-| Modelo | MAE (min) | RMSE (min) | $R^2$ | Mejora MAE vs. Baseline 0 |
-| :--- | :---: | :---: | :---: | :---: |
-| **Baseline 0: Mediana Global (`13.07` min)** | 9.1992 | 14.2975 | -0.0852 | 0.00% |
-| **Baseline 1: Dummy por Par Origen-Destino** | **4.9237** | **7.7802** | **0.6787** | **+46.48%** |
-| **Baseline 2: Regresión Ridge Regularizada** | 7.3279 | 10.2034 | 0.4473 | +20.34% |
+| Modelo | Familia | MAE (min) | RMSE (min) | $R^2$ | Mejora MAE vs. Baseline 0 |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| **Baseline 0: Mediana Global (`13.07` min)** | Estadístico constante | 9.1992 | 14.2975 | -0.0852 | 0.00% |
+| **Baseline 2: Regresión Ridge Regularizada** | Lineal regularizado | 7.3279 | 10.2034 | 0.4473 | +20.34% |
+| **Random Forest Optimizado** | Ensamble Bagging | 7.2496 | 9.7786 | 0.4924 | +21.19% |
+| **Baseline 1: Dummy por Par Origen-Destino** | Empírico por ruta | 4.9237 | 7.7802 | 0.6787 | +46.48% |
+| **HistGradientBoosting Optimizado (L1 + OD)** | **Ensamble Boosting (L1)** | **4.0651** | **6.4749** | **0.7774** | **+55.81%** |
+
+> El modelo ganador (`HistGradientBoosting Optimizado (L1 + OD)`) reduce el MAE en **17.44%** adicional respecto al exigente `Baseline 1` al combinar la interacción par origen–destino (`ODPairTransformer` + `TargetEncoder`) con variables horarias y pérdida **L1 (`loss="absolute_error"`)**.
 
 ---
 
 ## 5. Requisitos e Instrucciones de Reproducción
+
+Todas las semillas aleatorias están fijadas en `RANDOM_STATE = 42`.
 
 ```bash
 pip install -r requirements.txt
 ```
 
 Para regenerar el flujo completo:
-1. Ejecutar `notebooks/01_exploracion_inicial.ipynb` para revisar el análisis exploratorio de los 6 meses.
-2. Ejecutar `notebooks/02_limpieza_features.ipynb` para procesar los 6 meses con *downcasting* y generar `data/processed/yellow_tripdata_processed.parquet`.
-3. Ejecutar `notebooks/03_modelos.ipynb` para reproducir la partición temporal (Ene–May vs. Jun), los baselines y el entrenamiento de modelos.
+1. Ejecutar `notebooks/01_exploracion_inicial.ipynb` para revisar el análisis exploratorio de los 6 meses (`22,836,530` registros).
+2. Ejecutar `notebooks/02_limpieza_features.ipynb` para procesar los 6 meses con *downcasting* y generar `data/processed/yellow_tripdata_processed.parquet` (`16,409,232` registros).
+3. Ejecutar el entrenamiento y evaluación reproducible (`Ene–May` vs. `Junio`):
+   ```bash
+   python src/train.py
+   ```
+   *(Genera `models/best_model.joblib` localmente y actualiza `outputs/metrics.json`).*
+4. Ejecutar `notebooks/03_modelos.ipynb` para revisar los baselines, la comparación final de las 3 familias de modelos y sus gráficos.
+5. Ejecutar `notebooks/04_analisis_errores.ipynb` para generar la interpretabilidad de variables, el análisis de errores por subgrupos y las figuras en `reports/figures/` (consolidadas en `reports/informe_final.md`).

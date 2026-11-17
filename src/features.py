@@ -50,6 +50,21 @@ class FeatureExtractor(BaseEstimator, TransformerMixin):
         return X
 
 
+class ODPairTransformer(BaseEstimator, TransformerMixin):
+    """Agrega la interacción exacta par Origen-Destino (PULocationID, DOLocationID)."""
+
+    def fit(self, X: pd.DataFrame, y=None):
+        return self
+
+    def transform(self, X: pd.DataFrame) -> pd.DataFrame:
+        X_out = X.copy()
+        X_out["od_pair"] = (
+            X_out["PULocationID"].astype(np.int32) * 1000
+            + X_out["DOLocationID"].astype(np.int32)
+        )
+        return X_out
+
+
 def get_preprocessor(categorical_features, numeric_features, binary_features=None):
     """
     Retorna un ColumnTransformer optimizado en memoria (sparse CSR + float32)
